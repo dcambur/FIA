@@ -1,9 +1,13 @@
-from production import IF, AND, THEN, OR, forward_chain, simplify
+from production import IF, AND, THEN, OR, backward_chain, simplify, \
+    forward_chain
 
 
 class SharedTokens:
     interested_in_jewellery = "(?x) interested in jewellery"
     is_jewellery_expert = "(?x) is a jewellery connoisseur"
+
+    def to_choice_list(self):
+        return [self.is_jewellery_expert]
 
 
 class LeisureTokens:
@@ -15,6 +19,9 @@ class LeisureTokens:
     wants_a_break = "(?x) wants to take a break from daily routine life"
     conclusion = "(?x) is a leisure tourist"
 
+    def to_choice_list(self):
+        return [self.stress, self.no_vacation, self.hotel_recommended]
+
 
 class BusinessTokens:
     wants_a_meet = "(?x) wants to join a meeting related to his job"
@@ -24,6 +31,9 @@ class BusinessTokens:
         "(?x) isn't satisfied with current knowledge regarding job"
     is_outstanding = "(?x) is an outstanding member of the company"
     conclusion = "(?x) is a business tourist"
+
+    def to_choice_list(self):
+        return [self.is_outstanding, self.wants_know_more]
 
 
 class GourmetTokens:
@@ -38,6 +48,9 @@ class GourmetTokens:
     chef_cook = "(?x) is a chef cook"
     conclusion = "(?x) is a gourmet tourist"
 
+    def to_choice_list(self):
+        return [self.chef_cook, self.wine_expert]
+
 
 class CulturalTokens(SharedTokens):
     wants_visit_museums = "(?x) wants to visit some museums"
@@ -46,6 +59,10 @@ class CulturalTokens(SharedTokens):
     is_museum_guest = "(?x) is in invited guest list of a museum"
     wants_visit_jewellery_museum = "(?x) wants to visit a famous jewellery museum in Lunaria"
     conclusion = "(?x) is a cultural tourist"
+
+    def to_choice_list(self):
+        return [self.tour_ticket, self.is_jewellery_expert,
+                self.is_museum_guest]
 
 
 class ShoppingTokens(SharedTokens):
@@ -56,6 +73,10 @@ class ShoppingTokens(SharedTokens):
     interested_in_second_hand = "(?x) interested in second-hand clothes"
     has_necessary_money = "(?x) has necessary money"
     conclusion = "(?x) is a shopping tourist"
+
+    def to_choice_list(self):
+        return [self.has_necessary_money, self.is_jewellery_expert,
+                self.interested_in_branded_clothes, self.interested_in_second_hand]
 
 
 TOURIST_RULESET = (
@@ -115,7 +136,7 @@ TOURIST_RULESET = (
            CulturalTokens.is_museum_guest),
        THEN(CulturalTokens.wants_visit_jewellery_museum)),
 
-    IF(AND(CulturalTokens.tour_ticket),
+    IF(CulturalTokens.tour_ticket,
        THEN(CulturalTokens.wants_join_tour)),
 
     IF(OR(CulturalTokens.wants_visit_jewellery_museum,
@@ -124,7 +145,7 @@ TOURIST_RULESET = (
 
     # fifth type
     IF(OR(ShoppingTokens.interested_in_branded_clothes,
-          ShoppingTokens.interested_in_jewellery),
+          ShoppingTokens.interested_in_second_hand),
        THEN(ShoppingTokens.wants_shop_clothes)),
 
     IF(AND(ShoppingTokens.interested_in_jewellery,
@@ -141,8 +162,7 @@ leisure_tourist_name = "Dmitriy"
 TOURIST_DATA = (
     LeisureTokens.no_vacation.replace("(?x)", leisure_tourist_name),
     LeisureTokens.stress.replace("(?x)", leisure_tourist_name),
-    LeisureTokens.wants_a_break.replace("(?x)", leisure_tourist_name),
 )
 
-inst = forward_chain(TOURIST_RULESET, TOURIST_DATA)
-print(inst)
+hypothesis = LeisureTokens.conclusion.replace("(?x)", leisure_tourist_name)
+backward = backward_chain(TOURIST_RULESET, hypothesis)
