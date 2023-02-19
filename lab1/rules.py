@@ -162,7 +162,10 @@ leisure_tourist_name = "Dmitriy"
 TOURIST_DATA = (
     LeisureTokens.no_vacation.replace("(?x)", leisure_tourist_name),
     LeisureTokens.stress.replace("(?x)", leisure_tourist_name),
+
 )
 
-hypothesis = LeisureTokens.conclusion.replace("(?x)", leisure_tourist_name)
+hypothesis = CulturalTokens.conclusion.replace("(?x)", leisure_tourist_name)
 backward = backward_chain(TOURIST_RULESET, hypothesis)
+forward = forward_chain(TOURIST_RULESET, TOURIST_DATA)
+print(forward)

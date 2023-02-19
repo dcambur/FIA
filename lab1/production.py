@@ -34,21 +34,22 @@ def forward_chain(rules, data, apply_only_one=False, verbose=False):
     return data
 
 
-list_rules = []
-
-
-def backward_chain(rules, hypothesis, verbose=False):
+def backward_chain(rules, hypothesis, list_rules=None, verbose=False):
     """
     Outputs the goal tree from having rules and hypothesis,
     works like an "encyclopedia"
     """
+
+    if list_rules is None:
+        list_rules = []
+
     for rule in rules:
         match_res = match(rule.consequent()[0], hypothesis)
         if match_res:
             list_rules.append(rule.antecedent())
             for antecedent in rule.antecedent():
                 hypothesis = populate(antecedent, match_res)
-                backward_chain(rules, hypothesis, verbose)
+                backward_chain(rules, hypothesis, list_rules, verbose)
     return list_rules
 
 
