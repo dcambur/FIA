@@ -70,8 +70,7 @@ class Boid:
                 continue
             other_boid = Boid(sprite)
             proximity = self.get_proximity(other_boid)
-            if proximity.vec[0] <= self.radius and proximity.vec[
-                1] <= self.radius:
+            if proximity.vec[0] <= self.radius and proximity.vec[1] <= self.radius:
                 proximity_len += 1
                 # sum of velocities
                 align_vec += other_boid.velocity
@@ -91,11 +90,9 @@ class Boid:
                 continue
 
             other_boid = Boid(sprite)
-
             proximity = self.get_proximity(other_boid)
 
-            if proximity.vec[0] <= self.radius and proximity.vec[
-                1] <= self.radius:
+            if proximity.vec[0] <= self.radius and proximity.vec[1] <= self.radius:
                 # calculate the separation vector
                 separation_vector += (self.position - other_boid.position)
                 proximity_len += 1
@@ -117,8 +114,7 @@ class Boid:
             other_boid = Boid(sprite)
             proximity = self.get_proximity(other_boid)
 
-            if proximity.vec[0] <= self.radius and proximity.vec[
-                1] <= self.radius:
+            if proximity.vec[0] <= self.radius and proximity.vec[1] <= self.radius:
                 proximity_len += 1
                 # sum of positions
                 cohesion_vec += other_boid.position

@@ -73,7 +73,7 @@ missile_image = simplegui.load_image(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/shot2.png")
 
 # Asteroid images - asteroid_blue.png, asteroid_brown.png, asteroid_blend.png
-asteroid_info = ImageInfo([40, 40], [40, 40], 30)
+asteroid_info = ImageInfo([50, 50], [50, 50], 50)
 asteroid_image = simplegui.load_image(
     "http://commondatastorage.googleapis.com/codeskulptor-assets/lathrop/asteroid_blend.png")
 
@@ -180,7 +180,7 @@ class Ship:
         return self.radius
 
     def draw(self, canvas):
-        if (self.thrust):
+        if self.thrust:
             canvas.draw_image(ship_image,
                               [3 * self.image_center[0], self.image_center[1]],
                               self.image_size, self.pos, self.image_size,
@@ -201,7 +201,7 @@ class Ship:
             self.pos[i] += self.vel[i]
             self.vel[i] *= (1 - const_friction)
 
-            if (self.thrust):
+            if self.thrust:
                 self.vel[i] += forward_vector[i] * const_thrust
 
         # updating angle
@@ -212,7 +212,7 @@ class Ship:
         self.angle_vel = const_rotation * turn
 
     def accelerate(self, thrust_on):
-        if (thrust_on > 0):
+        if thrust_on > 0:
             self.thrust = True
             ship_thrust_sound.rewind()
             ship_thrust_sound.play()
@@ -221,7 +221,7 @@ class Ship:
             ship_thrust_sound.pause()
 
     def fire(self, shoot):
-        if (shoot > 0):
+        if shoot > 0:
             forward_vector = angle_to_vector(self.angle)
             newpos = [0, 0]
             newvel = [0, 0]
@@ -303,7 +303,7 @@ class Sprite:
 def click(pos):
     """
     Mouseclick handler that resets UI and conditions whether splash image is drawn.
-    Additionally resets the number of lives and the score, the background soundtrack
+    Additionally, resets the number of lives and the score, the background soundtrack
     """
     global lives, score, started, const_rock_speed
 
@@ -449,6 +449,6 @@ frame.set_keydown_handler(keydown)
 frame.set_keyup_handler(keyup)
 frame.set_mouseclick_handler(click)
 timer = simplegui.create_timer(1000.0, rock_spawner)
-timer_boid = simplegui.create_timer(10.0, boid_handler)
+timer_boid = simplegui.create_timer(50.0, boid_handler)
 # Lastly and most importantly
 frame.start()
